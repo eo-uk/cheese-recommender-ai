@@ -18,19 +18,23 @@ class Recommender():
         self.data = data
         self.categorical_features = categorical_features    
 
-    def _make_data_frame(self, data: str) -> pandas.DataFrame:
+    def _make_data_frame(self, data: str) -> pandas.Series | pandas.DataFrame:
         """
         Reads json data and returns it as a Pandas data frame
         """
         return pandas.read_json(StringIO(data))
 
-    def _encode_features(self, data_frame: pandas.DataFrame, features: list[str]) -> numpy.ndarray:
+    def _encode_features(
+        self,
+        data_frame: pandas.Series | pandas.DataFrame,
+        features: list[str]
+    ) -> numpy.ndarray:
         """
         Encodes categorical features with OneHotEncoder
         """
         return OneHotEncoder().fit_transform(data_frame[features]).toarray()
 
-    def _get_similarity_matrix(self, features: list[str]) -> numpy.ndarray:
+    def _get_similarity_matrix(self, features: numpy.ndarray) -> numpy.ndarray:
         """
         Returns cosine similarity of features provided
         """
@@ -55,7 +59,7 @@ class Recommender():
 
         similar_items_indices = [i[0] for i in similarity_scores[1:limit+1]]
 
-        return self.data_frame.iloc[similar_items_indices]
+        return self.data_frame.iloc[similar_items_indices]  # type: ignore
 
     def get_index_by_feature(self, feature: str, value: str) -> int:
         """
