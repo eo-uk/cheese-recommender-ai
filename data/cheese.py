@@ -1,4 +1,4 @@
-CHEESE_DATA = [
+DATA = [
     {
         "name": "Cheddar",
         "country": "England",
